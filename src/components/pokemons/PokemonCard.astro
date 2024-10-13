@@ -1,0 +1,46 @@
+---
+interface Props {
+	name: string;
+	url: string;
+	isBig?: boolean;
+}
+
+const { name, url, isBig = false } = Astro.props;
+
+const pokemonId = url.split('/').at(-2);
+
+const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`;
+
+const pokemonNumber = pokemonId!.toString().padStart(4, '0');
+---
+
+<a
+	class:list={[
+		'flex flex-col items-center justify-center p-2',
+		{
+			'rounded-xl border shadow-md': !isBig,
+		},
+	]}
+	href={`/pokemons/${name}`}
+>
+	<img
+		transition:name={`${name}-image`}
+		src={imageSrc}
+		alt={name}
+		class:list={[
+			'my-8',
+			{
+				'size-full': isBig,
+				'size-24': !isBig,
+			},
+		]}
+	/>
+	<span
+		class:list={[
+			{
+				'text-3xl': isBig,
+			},
+		]}># {pokemonNumber}</span
+	>
+	{!isBig ? <span class='capitalize'>{name}</span> : null}
+</a>
