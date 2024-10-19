@@ -3,6 +3,7 @@ import type { GetStaticPaths } from 'astro';
 import type { PokemonListResponse } from '@/interfaces/pokemon-list.response';
 import PokemonCard from '@/components/pokemons/PokemonCard.astro';
 import MainLayout from '@/layout/MainLayout.astro';
+import Title from '@/components/shared/Title.astro';
 
 export const getStaticPaths = (async ({ paginate }) => {
 	const resp = await fetch('https://pokeapi.co/api/v2/pokemon?limit=151');
@@ -12,19 +13,16 @@ export const getStaticPaths = (async ({ paginate }) => {
 	return paginate(allPokemons, { pageSize: 10 });
 }) satisfies GetStaticPaths;
 
-const title = 'Pokémon Static | Home';
+const title = 'Paginado de Pokémons';
 
 const { page } = Astro.props;
 ---
 
 <MainLayout title={title}>
-	<h1 class='mx-6 my-10 text-center text-5xl font-semibold'>
-		Listado de Pokémons
-	</h1>
-	<hr />
+	<Title> Paginado de Pokémons </Title>
 
 	<section
-		aria-label='Listado de Pokémons'
+		aria-label='Paginado de Pokémons'
 		class='mx-4 my-8 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'
 	>
 		{
@@ -64,10 +62,10 @@ const { page } = Astro.props;
 
 <style>
 	.btn {
-		@apply mx-7 border-spacing-2 rounded-xl border border-indigo-700 bg-indigo-500 px-4 py-2 transition-colors duration-300 hover:bg-indigo-300;
+		@apply mx-7 border-spacing-2 rounded-xl border border-blue-700 bg-blue-500 px-4 py-2 transition-colors duration-300 hover:bg-blue-400;
 	}
 
 	.disabled {
-		@apply mx-7 border-spacing-2 rounded-xl border border-gray-800 bg-gray-600 px-4 py-2 text-gray-400;
+		@apply mx-7 border-spacing-2 rounded-xl border-2 border-gray-800 bg-gray-600 px-4 py-2 text-gray-400;
 	}
 </style>
