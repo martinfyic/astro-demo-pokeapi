@@ -1,0 +1,47 @@
+---
+const links = [
+	{
+		href: '/',
+		text: 'Listado',
+	},
+	{
+		href: '/pokemons/1',
+		text: 'Paginado',
+	},
+	{
+		href: '/favorites',
+		text: 'Favoritos',
+	},
+];
+
+const currentPath = Astro.url;
+---
+
+<nav class='bg-slate-900 shadow'>
+	<div
+		class='container mx-auto flex items-center justify-center p-6 capitalize text-gray-300'
+	>
+		{
+			links.map(({ href, text }) => {
+				return (
+					<div>
+						<a
+							href={href}
+							class='mx-1.5 text-gray-200 hover:text-gray-400 sm:mx-6'
+						>
+							{text}
+						</a>
+						{currentPath.pathname === href ? (
+							<div
+								transition:name='menu-line'
+								class='mx-4 border-b-2 border-blue-500'
+							/>
+						) : (
+							<div class='mx-4 border-b-2 border-transparent' />
+						)}
+					</div>
+				);
+			})
+		}
+	</div>
+</nav>
