@@ -1,4 +1,6 @@
 ---
+import Footer from '@/components/shared/Footer.astro';
+import NavBar from '@/components/shared/NavBar.astro';
 import { siteInfo } from '@/config/site-info';
 import { ViewTransitions } from 'astro:transitions';
 
@@ -59,9 +61,11 @@ const {
 		<title>{title}</title>
 		<ViewTransitions />
 	</head>
-	<body class='m-auto max-w-5xl bg-slate-800 text-slate-100'>
-		<main>
+	<body class='bg-slate-800 text-slate-100'>
+		<NavBar />
+		<main class='mx-auto mb-10 min-h-dvh w-full max-w-6xl px-4'>
 			<slot />
 		</main>
+		<Footer />
 	</body>
 </html>
