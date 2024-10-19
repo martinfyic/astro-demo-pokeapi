@@ -3,6 +3,8 @@ import type { GetStaticPaths } from 'astro';
 import MainLayout from '@/layout/MainLayout.astro';
 import PokemonCard from '@/components/pokemons/PokemonCard.astro';
 import type { PokemonListResponse } from '@/interfaces/pokemon-list.response';
+import Title from '@/components/shared/Title.astro';
+import { Icon } from 'astro-icon/components';
 
 export const getStaticPaths = (async () => {
 	const resp = await fetch('https://pokeapi.co/api/v2/pokemon?limit=151');
@@ -33,8 +35,32 @@ const audioSrc = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pok
 	image={image}
 >
 	<section class='mx-10 mt-10 flex flex-col items-center justify-center'>
-		<a href='/'>Regresar</a>
-		<h1 class='my-3 text-center text-7xl'>{pokemonNameCapitalize}</h1>
+		<div class='flex flex-row items-center'>
+			<div>
+				<Title>{pokemonNameCapitalize}</Title>
+			</div>
+			<button
+				id='btn-favorite'
+				data-name={name}
+				data-id={pokemonId}
+			>
+				<Icon
+					name='start-outline'
+					data-outline
+					size={40}
+					color='yellow'
+					title='Agregar a favoritos'
+				/>
+				<Icon
+					class='hidden'
+					name='start-full'
+					data-full
+					size={40}
+					color='yellow'
+					title='Quitar de favoritos'
+				/>
+			</button>
+		</div>
 		<PokemonCard
 			name={name}
 			url={url}
@@ -51,11 +77,79 @@ const audioSrc = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pok
 			/>
 			Your browser does not support the audio element.
 		</audio>
+
+		<button
+			class='btn-return'
+			onclick='history.back()'
+			>Regresar</button
+		>
 	</section>
 </MainLayout>
 
 <style>
-	a {
-		@apply my-6 rounded-xl bg-gray-950 px-4 py-2 text-blue-500 transition-colors duration-300 hover:text-blue-300 hover:underline;
+	.btn-return {
+		@apply mx-7 mb-10 border-spacing-2 rounded-xl border border-blue-700 bg-blue-500 px-4 py-2 transition-colors duration-300 hover:bg-blue-400;
+	}
+
+	#btn-favorite {
+		@apply ml-4 hover:animate-pulse;
 	}
 </style>
+
+<script>
+	interface FavoritePokemons {
+		name: string;
+		id: number;
+	}
+
+	const handlePageLoad = () => {
+		let favoritePokemons: FavoritePokemons[] = JSON.parse(
+			localStorage.getItem('favorites') ?? '[]'
+		);
+
+		const btnFavorite = document.querySelector(
+			'#btn-favorite'
+		) as HTMLButtonElement;
+
+		if (!btnFavorite) return;
+
+		const name = btnFavorite.dataset.name ?? '';
+		const id = btnFavorite.dataset.id ?? '';
+		const isFavorite = favoritePokemons.some(fav => fav.name === name);
+
+		const startOutline = btnFavorite.querySelector(
+			'[data-outline]'
+		) as HTMLElement;
+		const startFull = btnFavorite.querySelector('[data-full]') as HTMLElement;
+
+		if (isFavorite) {
+			startOutline.classList.add('hidden');
+			startFull.classList.remove('hidden');
+		}
+
+		const toggleFavorites = () => {
+			const isFavorite = favoritePokemons.some(fav => fav.name === name);
+
+			if (isFavorite) {
+				// Remover pokémon de fav
+				favoritePokemons = favoritePokemons.filter(
+					pokemon => pokemon.name !== name
+				);
+			} else {
+				// Agregar pokémon a fav
+				favoritePokemons.push({ name: name, id: +id });
+			}
+
+			localStorage.setItem('favorites', JSON.stringify(favoritePokemons));
+		};
+
+		btnFavorite.addEventListener('click', () => {
+			startOutline.classList.toggle('hidden');
+			startFull.classList.toggle('hidden');
+
+			toggleFavorites();
+		});
+	};
+
+	document.addEventListener('astro:page-load', handlePageLoad);
+</script>
