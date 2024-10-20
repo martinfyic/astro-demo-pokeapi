@@ -1,10 +1,10 @@
 ---
 import type { GetStaticPaths } from 'astro';
+import { Icon } from 'astro-icon/components';
 import MainLayout from '@/layout/MainLayout.astro';
 import PokemonCard from '@/components/pokemons/PokemonCard.astro';
 import type { PokemonListResponse } from '@/interfaces/pokemon-list.response';
 import Title from '@/components/shared/Title.astro';
-import { Icon } from 'astro-icon/components';
 
 export const getStaticPaths = (async () => {
 	const resp = await fetch('https://pokeapi.co/api/v2/pokemon?limit=151');
@@ -97,13 +97,10 @@ const audioSrc = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pok
 </style>
 
 <script>
-	interface FavoritePokemons {
-		name: string;
-		id: number;
-	}
+	import type { FavoritePokemon } from '@/interfaces/favorites-pokemon';
 
 	const handlePageLoad = () => {
-		let favoritePokemons: FavoritePokemons[] = JSON.parse(
+		let favoritePokemons: FavoritePokemon[] = JSON.parse(
 			localStorage.getItem('favorites') ?? '[]'
 		);
 
