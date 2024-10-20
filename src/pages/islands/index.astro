@@ -1,0 +1,19 @@
+---
+import MainLayout from '@/layout/MainLayout.astro';
+import { Counter } from '@/components/Counter';
+import Title from '@/components/shared/Title.astro';
+---
+
+<MainLayout
+	title='Astro Islands 🏝'
+	description='Aqui veras como funciona las islas de astro'
+>
+	<Title>Islas 🏝</Title>
+
+	<div
+		class='my-16 h-[1500px] w-full rounded-2xl bg-gradient-to-r from-cyan-500 to-blue-500 shadow-xl'
+	>
+	</div>
+
+	<Counter client:visible />
+</MainLayout>
